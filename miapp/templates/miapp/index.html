@@ -6,8 +6,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CalendarHitos</title>
-    <link rel="stylesheet" href="css/bootstrap.css">
-    <link rel="stylesheet" href="css/estilos.css">
+    <link rel="stylesheet" href="../../static/miapp/css/bootstrap.css">
+    <link rel="stylesheet" href="../../static/miapp/css/estilos.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
 
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed&display=swap" rel="stylesheet">
@@ -15,52 +15,47 @@
 <body>
     <div class="logo">
         <img src="img/Logo.jpg">
+
     </div>        
     <div class="Calendario">
-        <h1>AQUI VA EL CALENDARIO</h1>  
+        <h1>AQUI VA EL CALENDARIO</h1>
     </div>
     <div>
-        <h2>PROXIMOS EVENTOS</h2>
-        <div id="fila1" class="row">
-            <div class="row row-cols-1 row-cols-md-3 g-4">
-                <div id="col2" class="col">
-                    <div class="card">
-                        <h3>23 de marzo</h3>
-                        <p>Lorem ipsum dolor sit amet</p>
-                        <p>Consectetur adipiscing elit. Donec sodales mod lacus , tincidunt Suspendisse in nulla vel , molestie mini U vulputate in turpis ut efficitur .</p>
+        {% if user.is_authenticated %}
+            {% if user.userrol.get_rol_display == "Developer" %}
+                <a id="boton" href="http://127.0.0.1:8000/docs/" class="btn btn-primary">Acceso API</a>
+            {% else %}
+            <h2>PROXIMOS EVENTOS</h2>
+            <div id="fila1" class="row">
+                <div class="row row-cols-1 row-cols-md-3 g-4">
+                    {% for hito in hitosuser %}
+                    <div id="col2" class="col">
+                        <div class="card">
+                            <h3>{{ hito.titulo }}</h3>
+                            <p>{{ hito.fecha_termino}}</p>
+                            <p>{{ hito.get_segmento_display }}/{{ hito.get_tipo_display }}</p>
+                            <p>{{ hito.descripcion }}</p>
+                        </div>
                     </div>
-                </div>
-                <div id="col3" class="col">
-                    <div class="card">
-                        <h3>24 de marzo</h3>
-                        <p>Lorem ipsum dolor sit amet</p>
-                        <p>Consectetur adipiscing elit. Donec sodales mod lacus , tincidunt Suspendisse in nulla vel , molestie mini U vulputate in turpis ut efficitur .</p>
-                    </div>
-                </div>
-                <div id="col4" class="col">
-                    <div class="card">
-                        <h3>25 de marzo</h3>
-                        <p>Lorem ipsum dolor sit amet</p>
-                        <p>Consectetur adipiscing elit. Donec sodales mod lacus , tincidunt Suspendisse in nulla vel , molestie mini U vulputate in turpis ut efficitur .</p>
-                    </div>
+                    {% endfor %}
                 </div>
             </div>
-            </div>
-        </div>
-    
-
+            {% endif %}
+        {% endif %}
+    </div>
   <body>
     <div id="fila" class="row">
     <div id="Segmento" class="dropdown-container">
     <div id="col1" class="col-6">
         <div class="dropdown">
-          <span>Segmento</span>
-          <div class="dropdown-content">
+            <span>Segmento</span>
+            <div class="dropdown-content">
             <div class="dropdown-arrow"></div>
-            <a href="#">Opción 1</a>
-            <a href="#">Opción 2</a>
-            <a href="#">Opción 3</a>
-          </div>
+            <a href="{% url 'home' %}">Ninguno</a>
+            {% for segmento in tiposegmento %}
+                <a href="{% url 'segmento' segmento.1 %}">{{ segmento.1 }}</a>
+            {% endfor %}
+            </div>
         </div>
     </div>  
     <div id="col2" class="col-6">
@@ -68,9 +63,10 @@
           <span>Tipo</span>
           <div class="dropdown-content">
             <div class="dropdown-arrow"></div>
-            <a href="#">Opción A</a>
-            <a href="#">Opción B</a>
-            <a href="#">Opción C</a>
+            <a href="{% url 'home' %}">Ninguno</a>
+            {% for tipo in tipohitos %}
+            <a href="{% url 'tipo' tipo.1 %}">{{ tipo.1 }}</a>
+            {% endfor %}
           </div>
         </div>
     </div>
@@ -89,8 +85,17 @@
             <td>Tipo</td>
             <td>Segmento</td>
         </tr>
+        {% for hito in hitosvigentes %}
+        <tr>
+            <td>{{ hito.titulo }}</td>
+            <td>{{ hito.fecha_inicio }}</td>
+            <td>{{ hito.fecha_termino }}</td>
+            <td>{{ hito.get_tipo_display }}</td>
+            <td>{{ hito.get_segmento_display }}</td>
+        </tr>
+        {% endfor %}
     </table>
 
-    <script src="js/bootstrap.js"></script>
+    <script src="bootstrap.bundle.min.js"></script>
 </body>
 </html>

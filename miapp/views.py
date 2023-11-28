@@ -6,16 +6,64 @@ from rest_framework.views import View
 from rest_framework import generics
 from rest_framework.response import Response
 from rest_framework import status
-from .models import Hito
+from .models import Hito, tipohito, tiposegmento
 from .serializer import HitoSerialiazer
 from rest_framework import viewsets, permissions
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
 from .permissions import EsDeveloper
+from django.utils import timezone
+from datetime import datetime
+
 
 def index(request):
-    return render(request, 'miapp/index.html')
+    hitosvigente = Hito.objects.filter(fecha_termino__gt=datetime.now())
+    user = request.user
+    hitosuser = Hito.objects.filter(segmento=user.userrol.rol)[:3]
+    context = {
+        'hitosvigentes':hitosvigente,
+        'tipohitos':tipohito,
+        'tiposegmento':tiposegmento,
+        'hitosuser':hitosuser
+    }
+
+    return render(request, 'miapp/index.html', context)
+
+def SegmentoHitoView(request, segmentobuscado):
+    este = ''
+    for x in tiposegmento:
+        if segmentobuscado == x[1]:
+            este = x[0]
+    hitosvigentes = Hito.objects.filter(segmento=este).filter(fecha_termino__gt=datetime.now())
+    user = request.user
+    hitosuser = Hito.objects.filter(segmento=user.userrol.rol)[:3]
+    context = {
+        'hitosvigentes':hitosvigentes,
+        'tipohitos':tipohito,
+        'tiposegmento':tiposegmento,
+        'hitosuser':hitosuser
+    }
+
+    return render(request, 'miapp/index.html', context)
+
+
+def TipoHitoView(request, tipobuscado):
+    buscado = ''
+    for x in tipohito:
+        if tipobuscado == x[1]:
+            buscado = x[0]
+    hitosvigentes = Hito.objects.filter(tipo=buscado).filter(fecha_termino__gt=datetime.now())
+    user = request.user
+    hitosuser = Hito.objects.filter(fecha_termino__gt=datetime.now()).filter(segmento=user.userrol.rol)[:3]
+    context = {
+        'hitosvigentes':hitosvigentes,
+        'tipohitos':tipohito,
+        'tiposegmento':tiposegmento,
+        'hitosuser':hitosuser
+    }
+
+    return render(request, 'miapp/index.html', context)
 
 class HitoView(View):
     queryset = Hito.objects.all()

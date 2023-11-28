@@ -25,5 +25,7 @@ urlpatterns = [
     path('miapp/', include('miapp.urls')),
     path('docs/', include_docs_urls(title='Api Documentation')),
     path('api/', include('miapp.urls')),
-    path('', views.index, name='home')
+    path('', views.index, name='home'),
+    path('tipo/<tipobuscado>', views.TipoHitoView, name='tipo'),
+    path('segmento/<segmentobuscado>', views.SegmentoHitoView, name='segmento')
 ]

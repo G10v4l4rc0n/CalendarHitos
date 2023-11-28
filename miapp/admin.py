@@ -1,6 +1,6 @@
 from django.contrib import admin
-from .models import Hito
+from .models import Hito, UserRol
 
 
 admin.site.register(Hito)
-# Register your models here.
+admin.site.register(UserRol)
