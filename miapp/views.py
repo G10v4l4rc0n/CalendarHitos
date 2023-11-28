@@ -13,9 +13,17 @@ from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
 from .permissions import EsDeveloper
+<<<<<<< HEAD
 from django.utils import timezone
 from datetime import datetime
 
+=======
+from django.contrib.auth.decorators import permission_required
+from django.utils import timezone
+from .serializer import HitoSerialiazer
+from django.db.models import ExpressionWrapper, F, IntegerField
+from rest_framework.decorators import api_view
+>>>>>>> febddda7094819ef0704d5f8785c999b8ddaae20
 
 def index(request):
     hitosvigente = Hito.objects.filter(fecha_termino__gt=datetime.now())
@@ -89,6 +97,10 @@ class HitoView(View):
             else:
                 datos= {'message': "Hito no encontrado"}
             return JsonResponse(datos)
+        
+
+        
+    @permission_required('developer')    
     def post(self, request):
         self.check_permissions(request, EsDeveloper)
         jd = json.loads(request.body)
@@ -101,6 +113,8 @@ class HitoView(View):
         datos = {'message': "Realizado",'hito': model_to_dict(hito)}
         return JsonResponse(datos)
     
+
+    @permission_required('developer')
     def put(self, request, id):
         self.check_permissions(request, EsDeveloper)
         jd =json.loads(request.body)
@@ -120,6 +134,8 @@ class HitoView(View):
             datos= {'message': "Hito no encontrado"}
         return JsonResponse(datos)
     
+
+    @permission_required('developer')
     def delete(self,request,id):
         self.check_permissions(request, EsDeveloper)
         hitos =list (Hito.objects.filter(id=id).values())
@@ -140,14 +156,23 @@ class HitoAPI(generics.ListAPIView):
         queryset = super().get_queryset()
         año = self.request.query_params.get('año', None)
         segmento = self.request.query_params.get('segmento', None)
-        tipo = self.request.query_params.get('tipo', None)
+        tipo = self.request.request.query_params.get('tipo', None)
+        dias_restantes = self.request.query_params.get('dias_restantes', None)
         if año is not None:
             queryset = queryset.filter(fecha_inicio__year=año)
         if segmento is not None:
             queryset = queryset.filter(segmento=segmento)
         if tipo is not None:
             queryset = queryset.filter(tipo=tipo)
+        if dias_restantes is not None:
+            queryset = filtrar_por_dias_restantes(queryset, dias_restantes)
         return queryset
+
+def filtrar_por_dias_restantes(queryset, dias_restantes):
+    fecha_actual = timezone.now()
+    queryset = queryset.filter(fecha_inicio__gte=fecha_actual)
+    queryset = queryset.annotate(dias_restantes=ExpressionWrapper(F('fecha_inicio') - fecha_actual, output_field=IntegerField())).filter(dias_restantes__lte=dias_restantes)
+    return queryset
 
 #http://localhost:8000/api/hitos/?año=2023&tipo=V&segmento=Co forma de filtrar por año,tipo y segmento
 #Class que funciona con /docs/, sirve para ver como se implementan los elementos en la API, permite las acciones de GET,POST,PUT y DELETE, es mucho más
@@ -156,3 +181,5 @@ class HitoViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticatedOrReadOnly]
     queryset = Hito.objects.all()
     serializer_class = HitoSerialiazer
+
+

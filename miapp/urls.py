@@ -9,5 +9,5 @@ router.register(r'hitos', views.HitoViewSet)
 urlpatterns = [
     path('', include(router.urls)),
     path('eventos/', HitoView.as_view(), name='hitos_list'),
-    path('eventos/<int:id>', HitoView.as_view(), name='hitos_process')
+    path('eventos/<int:id>', HitoView.as_view(), name='hitos_process'),
 ]
