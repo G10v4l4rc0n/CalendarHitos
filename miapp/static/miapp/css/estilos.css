@@ -46,7 +46,6 @@ h1, h3, .card, .dropdown, table{
   }
 
   .dropdown-content {
-    margin-top: 20px;
     display: none;
     width: 100%;
     position: absolute;
