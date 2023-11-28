@@ -1,6 +1,103 @@
-@media screen and (max-width: 576px) {
-    #cartas{
-        margin-left: 5px;
-        margin-right: 5px;
-    }
+.logo img{
+    height: 110px;
+}
+
+body{
+    font-family: 'Roboto Condensed', sans-serif;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+h1, h3, .card, .dropdown, table{
+    font-family: 'Roboto Condensed';
+}
+
+.card {
+    width: 300px; /* Ancho fijo de la tarjeta */
+    height: 300px; /* Altura fija de la tarjeta */
+    border: 1px solid #1b1b1b;
+    border-radius: 40px;
+    display: flex;
+    padding: 20px;
+    margin: 0;
+    align-items: left;
+    justify-content: left;
+  }
+
+
+.dropdown-container {
+    display: flex;
+  }
+
+  /* Estilos para cada menú desplegable */
+  .dropdown {
+    height: 40px;
+    padding: 8px;
+    padding-left: 10px;
+    position: relative;
+    margin-right: 20px; /* Espacio entre los menús */
+    cursor: pointer;
+    border: 1px solid #ccc;
+    border-radius: 2px;
+  }
+
+  #col1{
+    margin-right: 20px;
+  }
+
+  .dropdown-content {
+    display: none;
+    width: 100%;
+    position: absolute;
+    background-color: #fff;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    border: 1px solid #ccc;
+    border-radius: 0 0 4px 4px;
+    min-width: 160px;
+    z-index: 1;
+    margin-top: 5px;
+  }
+
+
+  .dropdown:hover .dropdown-content {
+    display: block;
+  }
+
+
+  .dropdown-content a {
+    color: black;
+    padding: 10px 16px;
+    text-decoration: none;
+    display: block;
+    border-bottom: 1px solid #ccc;
+  }
+
+  .dropdown-content a:last-child {
+    border-bottom: none;
+  }
+
+  .dropdown-content a:hover {
+    background-color: #ddd;
+  }
+
+table, th, td{
+    margin-top: 20px;
+    border: 1px solid #ddd;
+}
+
+td{
+    text-align: center;
+    padding: 2px;
+}
+
+th{
+    text-align: center;
+    background-color: #eaeaea;
+    padding: 5px;
+    text-align: center;
+}
+
+#fila1{
+    padding: 20px;
+    justify-content: center;
 }

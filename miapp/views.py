@@ -1,6 +1,7 @@
 import json
 from django.forms import model_to_dict
 from django.http import JsonResponse
+from django.shortcuts import render
 from rest_framework.views import View
 from rest_framework import generics
 from rest_framework.response import Response
@@ -13,6 +14,8 @@ from django.views.decorators.csrf import csrf_exempt
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
 from .permissions import EsDeveloper
 
+def index(request):
+    return render(request, 'miapp/index.html')
 
 class HitoView(View):
     queryset = Hito.objects.all()
